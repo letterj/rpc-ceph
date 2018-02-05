@@ -1,0 +1,29 @@
+---
+## Set up Storage Drives
+- include: setup-ceph-storage.yml
+
+## Setup non-ceph components for testing
+- include: setup-rsyslog-server.yml
+- include: test-install-haproxy.yml
+  when: radosgw_keystone | bool
+- include: common/test-install-infra.yml
+  when: radosgw_keystone | bool
+- include: common/test-install-keystone.yml
+  when: radosgw_keystone | bool
+- include: test-install-openrc.yml
+  when: radosgw_keystone | bool
+
+## Ceph setup
+- include: ../playbooks/deploy-ceph.yml
+- include: ../playbooks/ceph-keystone-rgw.yml
+  when: radosgw_keystone | bool
+
+## Tests
+- include: test-rgw.yml
+- include: ../benchmark/fio_benchmark.yml
+
+## Logging setup and tests
+# This is done after to allow time for the logs
+# to exist.
+- include: ../playbooks/ceph-setup-logging.yml
+- include: test-logging.yml

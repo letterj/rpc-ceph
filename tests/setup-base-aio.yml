@@ -1,0 +1,3 @@
+---
+## Setup infrastructure on which to deploy Ceph
+- include: setup-containers.yml
